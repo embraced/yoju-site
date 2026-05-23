@@ -1,8 +1,8 @@
+@import '@fontsource-variable/noto-sans-tc';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import '@fontsource-variable/noto-sans-tc';
 
 @layer base {
   html {
