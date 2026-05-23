@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/og/default.png',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+const siteName = '有據 yoju';
+const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{fullTitle}</title>
+
+  <!-- OG / LINE / Facebook -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content={siteName} />
+  <meta property="og:title"       content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image"       content={Astro.site ? new URL(ogImage, Astro.site).href : ogImage} />
+  <meta property="og:url"         content={canonicalUrl} />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href={canonicalUrl} />
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <header class="border-b border-yoju-border bg-yoju-bg-card">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="text-2xl font-bold text-yoju-text hover:text-yoju-orange transition-colors">
+        有據 <span class="text-yoju-orange">yoju</span>
+      </a>
+      <span class="text-base text-yoju-text-muted hidden sm:block">給家人的每日衛教筆記</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-10">
+    <slot />
+  </main>
+
+  <Footer />
+</body>
+</html>
