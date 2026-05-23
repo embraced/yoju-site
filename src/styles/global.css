@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '@fontsource-variable/noto-sans-tc';
+
+@layer base {
+  html {
+    @apply bg-yoju-bg text-yoju-text font-sans;
+    font-size: 18px;
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  h1 { @apply text-3xl font-bold leading-tight mb-4; }
+  h2 { @apply text-2xl font-bold leading-snug mb-3; }
+  h3 { @apply text-xl font-semibold mb-2; }
+
+  article p   { @apply text-lg leading-relaxed mb-4; }
+  article ul  { @apply list-disc pl-6 mb-4 space-y-1; }
+  article ol  { @apply list-decimal pl-6 mb-4 space-y-1; }
+  article li  { @apply text-lg leading-relaxed; }
+  article a   { @apply text-yoju-orange underline; }
+  article strong { @apply font-bold; }
+}
