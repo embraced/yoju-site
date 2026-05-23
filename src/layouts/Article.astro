@@ -28,7 +28,8 @@ const { title, date, category, tldr, confidence, sources, slug } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
 
-const formattedDate = new Date(date).toLocaleDateString('zh-TW', {
+const [y, m, d] = date.split('-').map(Number);
+const formattedDate = new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
 ---
