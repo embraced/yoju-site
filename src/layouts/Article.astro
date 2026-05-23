@@ -1,0 +1,61 @@
+---
+import Base from './Base.astro';
+import TLDRBox from '../components/TLDRBox.astro';
+import SourceList from '../components/SourceList.astro';
+import ShareLine from '../components/ShareLine.astro';
+
+interface Source {
+  title: string;
+  url: string;
+  journal?: string;
+  quartile?: 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'official';
+  doi?: string;
+  retracted: boolean;
+}
+
+interface Props {
+  title: string;
+  date: string;
+  category: string;
+  tags: string[];
+  tldr: string;
+  confidence: 'high' | 'medium';
+  sources: Source[];
+  slug: string;
+}
+
+const { title, date, category, tldr, confidence, sources, slug } = Astro.props;
+const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
+const ogImage = `/og/${slug}.png`;
+
+const formattedDate = new Date(date).toLocaleDateString('zh-TW', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+---
+
+<Base title={title} description={tldr} ogImage={ogImage} canonicalUrl={articleUrl}>
+  <article>
+    <header class="mb-6">
+      <div class="flex items-center gap-2 mb-3">
+        <a href={`/${category}`}
+           class="text-sm font-semibold text-yoju-orange bg-amber-50 px-3 py-1 rounded-full hover:bg-amber-100 transition-colors">
+          {category}
+        </a>
+        <time datetime={date} class="text-sm text-yoju-text-muted">{formattedDate}</time>
+      </div>
+      <h1 class="text-3xl font-bold leading-tight text-yoju-text">{title}</h1>
+    </header>
+
+    <TLDRBox tldr={tldr} confidence={confidence} />
+
+    <ShareLine url={articleUrl} title={title} tldr={tldr} />
+
+    <div class="prose-article">
+      <slot />
+    </div>
+
+    <ShareLine url={articleUrl} title={title} tldr={tldr} />
+
+    <SourceList sources={sources} />
+  </article>
+</Base>
