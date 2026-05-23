@@ -8,6 +8,7 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   canonicalUrl?: string;
+  articleUrl?: string;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   ogImage = '/og/default.png',
   ogType = 'website',
   canonicalUrl = Astro.url.href,
+  articleUrl,
 } = Astro.props;
 
 const siteName = '有據 yoju';
@@ -60,6 +62,6 @@ const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
     <slot />
   </main>
 
-  <Footer />
+  <Footer articleUrl={articleUrl} />
 </body>
 </html>

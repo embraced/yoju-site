@@ -1,6 +1,21 @@
 ---
-const GOOGLE_FORM_URL = 'https://forms.gle/PLACEHOLDER'; // replace after form is created
+interface Props {
+  articleUrl?: string;
+}
+
+const { articleUrl } = Astro.props;
+
+const FORM_SHORT_URL = 'https://forms.gle/F2gho2rvhnbbysdk7';
+const FORM_PREFILL_BASE =
+  'https://docs.google.com/forms/d/e/1FAIpQLSc7HeqE-xBBxbwvIvsopySz61dHCREAJJvuPvONpK39UdV6uQ/viewform';
+const FORM_ARTICLE_ENTRY = 'entry.1554535540';
+
+const feedbackUrl = articleUrl
+  ? `${FORM_PREFILL_BASE}?usp=pp_url&${FORM_ARTICLE_ENTRY}=${encodeURIComponent(articleUrl)}`
+  : FORM_SHORT_URL;
+
 const FEEDBACK_EMAIL = 'yoju@embraced.co';
+const GITHUB_DISCUSSIONS = 'https://github.com/embraced/yoju-site/discussions';
 ---
 
 <footer class="mt-16 border-t border-yoju-border bg-yoju-bg-card">
@@ -19,14 +34,14 @@ const FEEDBACK_EMAIL = 'yoju@embraced.co';
       <p class="font-semibold text-yoju-text">📬 回饋與勘誤</p>
       <p>
         發現資訊有誤或需要補充？歡迎透過
-        <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener"
+        <a href={feedbackUrl} target="_blank" rel="noopener"
            class="text-yoju-orange underline">回饋表單</a>
         或寄信至
         <a href={`mailto:${FEEDBACK_EMAIL}?subject=yoju 文章回饋`}
            class="text-yoju-orange underline">{FEEDBACK_EMAIL}</a>
         告訴我們。
         醫療專業人士也歡迎在
-        <a href="https://github.com/PLACEHOLDER/yoju-site/discussions"
+        <a href={GITHUB_DISCUSSIONS}
            target="_blank" rel="noopener"
            class="text-yoju-orange underline">GitHub Discussions</a>
         交流設計理念。
