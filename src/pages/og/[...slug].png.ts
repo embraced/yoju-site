@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ props }) => {
   try {
     fontData = fs.readFileSync(fontPath);
   } catch {
-    throw new Error(`OG font not found at ${fontPath}. Run: cp node_modules/@fontsource-variable/noto-sans-tc/files/noto-sans-tc-chinese-traditional-700-normal.woff2 public/fonts/ and convert to TTF, or place NotoSansTC-Bold.ttf in public/fonts/`);
+    throw new Error(`OG font not found at ${fontPath}. Generate it with: python3 -c "from fontTools.ttLib import TTFont; f=TTFont('node_modules/@fontsource/noto-sans-tc/files/noto-sans-tc-chinese-traditional-700-normal.woff2'); f.flavor=None; f.save('public/fonts/NotoSansTC-Bold.ttf')"`);
   }
 
   const svg = await satori(
