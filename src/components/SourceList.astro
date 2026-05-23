@@ -1,0 +1,44 @@
+---
+interface Source {
+  title: string;
+  url: string;
+  journal?: string;
+  quartile?: 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'official';
+  doi?: string;
+  retracted: boolean;
+}
+
+interface Props {
+  sources: Source[];
+}
+const { sources } = Astro.props;
+
+const quartileColor: Record<string, string> = {
+  Q1:       'bg-green-100 text-green-800',
+  Q2:       'bg-blue-100 text-blue-800',
+  Q3:       'bg-yellow-100 text-yellow-800',
+  Q4:       'bg-gray-100 text-gray-600',
+  official: 'bg-purple-100 text-purple-800',
+};
+---
+
+<section class="mt-10 pt-6 border-t border-yoju-border">
+  <h2 class="text-xl font-semibold mb-4">參考來源</h2>
+  <ul class="space-y-3">
+    {sources.map((s) => (
+      <li class="flex items-start gap-3 text-base">
+        {s.quartile && (
+          <span class={`shrink-0 mt-0.5 px-2 py-0.5 rounded text-xs font-bold ${quartileColor[s.quartile]}`}>
+            {s.quartile === 'official' ? '官方' : s.quartile}
+          </span>
+        )}
+        <div>
+          <a href={s.url} target="_blank" rel="noopener noreferrer"
+             class="text-yoju-orange underline">{s.title}</a>
+          {s.journal && <span class="text-yoju-text-muted ml-1">— {s.journal}</span>}
+          {s.doi && <span class="text-sm text-gray-400 ml-1">DOI: {s.doi}</span>}
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
