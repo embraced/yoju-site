@@ -18,7 +18,12 @@ export const GET: APIRoute = async ({ props }) => {
   const { title, tldr, category } = article.data;
 
   const fontPath = path.join(process.cwd(), 'public/fonts/NotoSansTC-Bold.ttf');
-  const fontData = fs.readFileSync(fontPath);
+  let fontData: Buffer;
+  try {
+    fontData = fs.readFileSync(fontPath);
+  } catch {
+    throw new Error(`OG font not found at ${fontPath}. Run: cp node_modules/@fontsource-variable/noto-sans-tc/files/noto-sans-tc-chinese-traditional-700-normal.woff2 public/fonts/ and convert to TTF, or place NotoSansTC-Bold.ttf in public/fonts/`);
+  }
 
   const svg = await satori(
     {
@@ -72,6 +77,11 @@ export const GET: APIRoute = async ({ props }) => {
                 lineHeight: 1.3,
                 marginBottom: '24px',
                 flex: 1,
+                maxWidth: '1072px',
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 3,
+                overflow: 'hidden',
               },
               children: title,
             },
@@ -86,6 +96,11 @@ export const GET: APIRoute = async ({ props }) => {
                 marginBottom: '32px',
                 borderLeft: '4px solid #e07b39',
                 paddingLeft: '20px',
+                maxWidth: '1048px',
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
               },
               children: tldr,
             },
