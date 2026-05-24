@@ -3,6 +3,7 @@ import Base from './Base.astro';
 import TLDRBox from '../components/TLDRBox.astro';
 import SourceList from '../components/SourceList.astro';
 import ShareLine from '../components/ShareLine.astro';
+import RelatedArticles from '../components/RelatedArticles.astro';
 
 interface Source {
   title: string;
@@ -29,9 +30,10 @@ interface Props {
   sources: Source[];
   slug: string;
   supersededBy?: SupersededBy;
+  topicKey?: string;
 }
 
-const { title, date, category, tldr, confidence, sources, slug, supersededBy } = Astro.props;
+const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
 
@@ -74,6 +76,16 @@ const supersededFormattedDate = supersededBy
         <time datetime={date} class="text-sm text-yoju-text-muted">{formattedDate}</time>
       </div>
       <h1 class="text-3xl font-bold leading-tight text-yoju-text">{title}</h1>
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-3">
+          {tags.map((tag) => (
+            <a href={`/tag/${tag}`}
+               class="text-xs text-yoju-orange border border-yoju-orange/40 rounded-full px-2.5 py-0.5 hover:bg-yoju-orange/10 transition-colors">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
     </header>
 
     <TLDRBox tldr={tldr} confidence={confidence} />
@@ -87,5 +99,7 @@ const supersededFormattedDate = supersededBy
     <ShareLine url={articleUrl} title={title} tldr={tldr} />
 
     <SourceList sources={sources} />
+
+    <RelatedArticles currentSlug={slug} currentCategory={category} currentTags={tags} currentTopicKey={Astro.props.topicKey} />
   </article>
 </Base>

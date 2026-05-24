@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  currentCategory: string;
+  currentTags: string[];
+  currentTopicKey?: string;
+}
+
+const { currentSlug, currentCategory, currentTags, currentTopicKey } = Astro.props;
+
+const all = await getCollection('articles');
+
+// Score every candidate: category match (+3), shared tag (+2 each)
+// Exclude: self, superseded versions, same topic_key chain (already linked
+// via the "已有更新版" banner if applicable).
+type Scored = { article: (typeof all)[number]; score: number };
+
+const scored: Scored[] = all
+  .filter((a) => a.id !== currentSlug)
+  .filter((a) => !a.data.superseded_by)
+  .filter((a) => !currentTopicKey || a.data.topic_key !== currentTopicKey)
+  .map((a) => {
+    let score = 0;
+    if (a.data.category === currentCategory) score += 3;
+    const shared = a.data.tags.filter((t) => currentTags?.includes(t));
+    score += shared.length * 2;
+    return { article: a, score };
+  })
+  .filter(({ score }) => score > 0)
+  .sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    // Tiebreak: newer first
+    return b.article.data.date.localeCompare(a.article.data.date);
+  })
+  .slice(0, 3);
+
+const formatDate = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+};
+---
+
+{scored.length > 0 && (
+  <section class="mt-10 pt-6 border-t border-yoju-border">
+    <h2 class="text-xl font-semibold mb-4">相關文章</h2>
+    <ul class="space-y-4">
+      {scored.map(({ article }) => (
+        <li>
+          <a href={`/${article.id}`}
+             class="block bg-yoju-bg-card border border-yoju-border rounded-lg p-4 hover:shadow-md hover:border-yoju-orange/40 transition-all">
+            <div class="flex items-center gap-2 mb-2 text-sm">
+              <span class="text-yoju-orange font-semibold">{article.data.category}</span>
+              <span class="text-yoju-text-muted">·</span>
+              <time datetime={article.data.date} class="text-yoju-text-muted">
+                {formatDate(article.data.date)}
+              </time>
+            </div>
+            <p class="text-base font-bold text-yoju-text mb-1 leading-snug">
+              {article.data.title}
+            </p>
+            <p class="text-sm text-yoju-text-muted line-clamp-2 leading-relaxed">
+              {article.data.tldr}
+            </p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
