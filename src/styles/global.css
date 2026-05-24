@@ -24,4 +24,14 @@
   article li  { @apply text-lg leading-relaxed; }
   article a   { @apply text-yoju-orange underline; }
   article strong { @apply font-bold; }
+
+  /* Inline citation superscripts: small, orange, no underline on the bracket */
+  sup.citation {
+    @apply text-sm align-super text-yoju-orange font-semibold ml-0.5;
+    line-height: 0;
+  }
+  sup.citation a {
+    @apply no-underline hover:underline;
+    color: inherit;
+  }
 }

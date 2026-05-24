@@ -24,9 +24,13 @@ const quartileColor: Record<string, string> = {
 
 <section class="mt-10 pt-6 border-t border-yoju-border">
   <h2 class="text-xl font-semibold mb-4">參考來源</h2>
-  <ul class="space-y-3">
-    {sources.map((s) => (
-      <li class="flex items-start gap-3 text-base">
+  <p class="text-sm text-yoju-text-muted mb-4">
+    內文的 <sup class="citation">[N]</sup> 上標可點擊跳到對應來源；按瀏覽器返回鍵可回到原段落。
+  </p>
+  <ol class="space-y-3 list-none pl-0">
+    {sources.map((s, i) => (
+      <li id={`src-${i + 1}`} class="flex items-start gap-3 text-base scroll-mt-16 target:bg-amber-50 target:rounded-md target:px-2 target:py-1 transition-colors">
+        <span class="shrink-0 mt-0.5 text-yoju-orange font-bold tabular-nums w-6">[{i + 1}]</span>
         {s.quartile && (
           <span class={`shrink-0 mt-0.5 px-2 py-0.5 rounded text-xs font-bold ${quartileColor[s.quartile]}`}>
             {s.quartile === 'official' ? '官方' : s.quartile}
@@ -40,5 +44,5 @@ const quartileColor: Record<string, string> = {
         </div>
       </li>
     ))}
-  </ul>
+  </ol>
 </section>
