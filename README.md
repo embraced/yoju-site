@@ -79,7 +79,11 @@ superseded_by?:                # 該文已有更新版時的指向
 
 ### 🤖 想知道 AI 怎麼寫的
 
-完整的 AI 寫作 prompt、查證流程、信心評等規則在 [/about](https://yoju.embraced.co/about) 有公開說明。Pipeline 的執行記錄（每天哪些主題、哪些來源、哪些被 skip）會記錄在 yoju 私有 repo 的 logs/。
+**寫作角度與結構、查證流程、信心評等規則**在 [/about](https://yoju.embraced.co/about) 有完整說明，足以供讀者與醫療專業人士理解 AI 被如何指示。
+
+**完整的 prompt 文字、PubMed 查詢語法、SCImago 期刊清單、信心評分演算法**保留在私有 repo——這不是為了藏私，而是為了：(1) 避免被惡意 prompt injection 利用，(2) 維護負擔考量。如果你是醫師、教育工作者、或研究 AI 衛教的人，想看細節可以寄信 [yoju@embraced.co](mailto:yoju@embraced.co) 討論。
+
+Pipeline 的每日執行記錄（哪些主題、來源、哪些被 skip）也存於私有 repo 的 `logs/`。
 
 ---
 
