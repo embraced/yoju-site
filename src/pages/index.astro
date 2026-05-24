@@ -4,6 +4,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import { getCollection } from 'astro:content';
 
 const articles = (await getCollection('articles'))
+  .filter((a) => !a.data.superseded_by)
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 ---
 

@@ -23,6 +23,7 @@ const { Content } = await render(article);
   confidence={article.data.confidence}
   sources={article.data.sources}
   slug={article.id}
+  supersededBy={article.data.superseded_by}
 >
   <Content />
 </Article>

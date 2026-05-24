@@ -13,6 +13,12 @@ interface Source {
   retracted: boolean;
 }
 
+interface SupersededBy {
+  slug: string;
+  date: string;
+  title: string;
+}
+
 interface Props {
   title: string;
   date: string;
@@ -22,9 +28,10 @@ interface Props {
   confidence: 'high' | 'medium';
   sources: Source[];
   slug: string;
+  supersededBy?: SupersededBy;
 }
 
-const { title, date, category, tldr, confidence, sources, slug } = Astro.props;
+const { title, date, category, tldr, confidence, sources, slug, supersededBy } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
 
@@ -32,10 +39,32 @@ const [y, m, d] = date.split('-').map(Number);
 const formattedDate = new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
   year: 'numeric', month: 'long', day: 'numeric',
 });
+
+const supersededFormattedDate = supersededBy
+  ? (() => {
+      const [yy, mm, dd] = supersededBy.date.split('-').map(Number);
+      return new Date(yy, mm - 1, dd).toLocaleDateString('zh-TW', {
+        year: 'numeric', month: 'long', day: 'numeric',
+      });
+    })()
+  : null;
 ---
 
 <Base title={title} description={tldr} ogImage={ogImage} ogType="article" canonicalUrl={articleUrl} articleUrl={articleUrl}>
   <article>
+    {supersededBy && (
+      <aside class="mb-6 bg-yoju-orange/10 border-l-4 border-yoju-orange rounded-r-lg px-5 py-4 text-base text-yoju-text">
+        <p class="font-semibold mb-1">📌 本文已有更新版</p>
+        <p>
+          本文於 <time datetime={supersededBy.date}>{supersededFormattedDate}</time> 推出更新版，
+          建議閱讀：<a href={`/${supersededBy.slug}`}
+                  class="text-yoju-orange underline font-semibold hover:text-yoju-orange-light">
+            {supersededBy.title}
+          </a>
+        </p>
+      </aside>
+    )}
+
     <header class="mb-6">
       <div class="flex items-center gap-2 mb-3">
         <a href={`/${category}`}

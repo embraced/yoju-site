@@ -10,6 +10,12 @@ const SourceSchema = z.object({
   retracted: z.boolean().default(false),
 });
 
+const SupersededBySchema = z.object({
+  slug: z.string(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD'),
+  title: z.string(),
+});
+
 const articles = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/articles' }),
   schema: z.object({
@@ -27,6 +33,8 @@ const articles = defineCollection({
     tldr: z.string().max(200),
     confidence: z.enum(['high', 'medium']),
     sources: z.array(SourceSchema).min(1),
+    topic_key: z.string().optional(),       // stable identifier for augment chain
+    superseded_by: SupersededBySchema.optional(),  // pointer to latest version
   }),
 });
 
