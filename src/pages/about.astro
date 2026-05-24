@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="初衷 — 有據 yoju"
+  description="為什麼做 yoju、怎麼把 AI 寫的衛教文章變得可信、人工把關的角色"
+>
+  <article class="prose-article">
+    <h1 class="text-3xl font-bold mb-2 text-yoju-text">為什麼有「有據 yoju」</h1>
+    <p class="text-lg text-yoju-text-muted mb-8">健康有據，給家人的每日衛教筆記</p>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">起點：想關心家人，但…</h2>
+      <p class="text-lg leading-relaxed mb-3">
+        我有些已經退休的長輩，包括我太太的媽媽。我不住在他們旁邊，沒辦法每天觀察、每天提醒。
+      </p>
+      <p class="text-lg leading-relaxed mb-3">
+        有時候我會跟岳母提一些健康知識，例如阻力訓練的坐姿起立、每餐該攝取多少蛋白質。她常會回我「<strong>有啊，你看我可以</strong>」，然後示範幾下給我看。
+      </p>
+      <p class="text-lg leading-relaxed mb-3">
+        但我心裡知道——示範幾下不等於每天都做、動作幅度可能差很多、次數和頻率也離標準很遠。我想嘮叨，但又怕長輩覺得被管。住得遠的時候，連嘮叨的機會都沒有。
+      </p>
+      <p class="text-lg leading-relaxed">
+        如果我能<strong>每天傳一篇可靠、好懂、又把該嘮叨的話講清楚的衛教給家人</strong>，是不是就能填補「不在身邊」的距離？這就是 yoju 的起點。
+      </p>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">yoju 怎麼運作</h2>
+      <p class="text-lg leading-relaxed mb-4">
+        每天台灣時間清晨 6 點，背景的程式會自動：
+      </p>
+      <ol class="text-lg leading-relaxed space-y-2 mb-4">
+        <li>📚 <strong>查論文</strong>：依當日主題到 PubMed 撈最相關的醫學論文</li>
+        <li>🛡️ <strong>篩品質</strong>：用 SCImago 期刊排名挑出 Q1（最高品質）期刊，並查 CrossRef 排除已撤稿論文</li>
+        <li>🏥 <strong>對官方</strong>：對照 WHO、美國 NIA / NIH / AHA / ADA 等國際指南，以及台灣各醫學會的衛教頁面（每天 HEAD 驗活，死連結自動排除）</li>
+        <li>✍️ <strong>用 AI 改寫</strong>：把這些查證過的資料，由 AI（Claude）依嚴格規格改寫成「給家人看的」國中程度繁體中文文章</li>
+        <li>🚫 <strong>把關</strong>：找不到至少一個高可信度來源支持主要論點時，<strong>當天就不發</strong>。寧可漏一天，也不發未查證的內容</li>
+      </ol>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">人工 vs 自動的分工</h2>
+      <p class="text-lg leading-relaxed mb-4">
+        AI 自動的部分是<strong>查證、改寫、排版、發布</strong>。但有兩件事，永遠由真人決定：
+      </p>
+      <div class="bg-yoju-bg-card border border-yoju-border rounded-lg p-5 my-4">
+        <p class="font-semibold text-yoju-text mb-2">1. 寫什麼主題</p>
+        <p class="leading-relaxed">
+          每個主題都是我親自從家人會關心的角度挑出來的：肌少症、失智症、跌倒預防、骨質疏鬆、高血壓、糖尿病、睡眠障礙、心房顫動、慢性腎病、視力與聽力退化、前列腺肥大、維生素 D、老年憂鬱、大腸癌篩檢…等。
+        </p>
+      </div>
+      <div class="bg-yoju-bg-card border border-yoju-border rounded-lg p-5 my-4">
+        <p class="font-semibold text-yoju-text mb-2">2. 用什麼來源</p>
+        <p class="leading-relaxed">
+          每個主題的「官方來源」都是我手動策展的——優先選 WHO / NIH / AHA / ADA / USPSTF 等國際權威，搭配台灣的醫學會。我會定期檢查連結還活著、內容還對。我也會挑選照護線上等台灣醫師寫的衛教文章作為補充來源。
+        </p>
+      </div>
+      <p class="text-lg leading-relaxed">
+        換句話說：<strong>AI 負責勤勞、真人負責方向。</strong>AI 不會自己決定發什麼、引哪些連結。
+      </p>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">寫作角度：晚輩關心長輩</h2>
+      <p class="text-lg leading-relaxed mb-3">
+        每篇文章都被指示用「真心關心長輩、希望他們真的做到」的晚輩口吻撰寫，並且強制包含這些段落：
+      </p>
+      <ul class="text-lg leading-relaxed space-y-2 mb-4">
+        <li>✅ <strong>具體可執行的做法</strong>（不是「規律運動」，而是「一週 3 次、一組 10 下、靠扶手不算」）</li>
+        <li>✅ <strong>怎麼判斷做對了</strong>（自我檢核標準）</li>
+        <li>⚠️ <strong>「以為自己有做」的常見誤區</strong>（直白點出長輩容易自我感覺良好的地方）</li>
+        <li>👨‍👩‍👧 <strong>晚輩可以怎麼陪伴</strong>（下次回家、視訊、LINE 時可以怎麼觀察、怎麼開口問）</li>
+        <li>🚨 <strong>紅旗信號</strong>（什麼症狀該立刻看醫生）</li>
+      </ul>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">每篇文章上有的標示</h2>
+      <ul class="text-lg leading-relaxed space-y-2">
+        <li><span class="text-sm text-green-700 bg-green-50 px-2 py-0.5 rounded-full font-bold">✅ 高可信</span> &mdash; 主要論點有 Q1 期刊或官方機構支持</li>
+        <li><span class="text-sm text-yellow-700 bg-yellow-50 px-2 py-0.5 rounded-full font-bold">⚠️ 中可信</span> &mdash; 主要論點有 Q2 期刊或知名醫療機構支持</li>
+        <li><span class="text-sm text-yoju-orange bg-amber-50 px-2 py-0.5 rounded-full font-bold">📌 已更新</span> &mdash; 該主題後來推出更新版，會有橘色 banner 引導你看最新版</li>
+      </ul>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">你可以怎麼幫忙</h2>
+      <p class="text-lg leading-relaxed mb-3">
+        正確性第一，所以歡迎任何回報。每篇文章底下都有：
+      </p>
+      <ul class="text-lg leading-relaxed space-y-2">
+        <li>📝 <a href="https://forms.gle/F2gho2rvhnbbysdk7" target="_blank" rel="noopener" class="text-yoju-orange underline">回饋表單</a>：任何人都可以匿名回報內容錯誤、補充建議、用詞問題</li>
+        <li>✉️ <a href="mailto:yoju@embraced.co" class="text-yoju-orange underline">yoju@embraced.co</a>：寫信給我直接回饋</li>
+        <li>💬 <a href="https://github.com/embraced/yoju-site/discussions" target="_blank" rel="noopener" class="text-yoju-orange underline">GitHub Discussions</a>：醫療專業人士也歡迎在這裡交流設計理念、建議主題</li>
+      </ul>
+      <p class="text-lg leading-relaxed mt-4">
+        我每一篇被回報的勘誤都會親自看過、跟原始來源比對、必要時跟醫師朋友確認後才更新。
+      </p>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-bold text-yoju-text mb-3">關於透明度</h2>
+      <p class="text-lg leading-relaxed mb-3">
+        yoju 的網站程式碼是公開的：<a href="https://github.com/embraced/yoju-site" target="_blank" rel="noopener" class="text-yoju-orange underline">github.com/embraced/yoju-site</a>
+      </p>
+      <p class="text-lg leading-relaxed">
+        每篇文章的 frontmatter 都包含：原始來源連結（PubMed DOI、官方頁面）、期刊 Q 級別、發布日期、信心評等。讀者可以自行驗證每一條主張。
+      </p>
+    </section>
+
+    <section class="bg-amber-50 border border-amber-200 rounded-lg p-5 my-8">
+      <p class="font-semibold text-yoju-text mb-1">⚠️ 最後提醒</p>
+      <p class="leading-relaxed">
+        本站內容<strong>僅供衛教參考，不構成醫療建議</strong>。每個人的健康狀況不同，實際的診斷、用藥、運動處方，請務必諮詢您熟悉的醫師。
+      </p>
+    </section>
+
+    <p class="text-base text-yoju-text-muted text-center mt-12">
+      <a href="/" class="text-yoju-orange underline">← 回首頁看最新文章</a>
+    </p>
+  </article>
+</Base>
