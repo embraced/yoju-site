@@ -29,6 +29,7 @@ const articles = defineCollection({
       '代謝疾病',
       '感官退化',
     ]),
+    lifestage: z.enum(['elderly', 'middle-age', 'both']).default('elderly'),
     tags: z.array(z.string()),
     tldr: z.string().max(200),
     confidence: z.enum(['high', 'medium']),
