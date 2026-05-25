@@ -35,7 +35,8 @@ const articles = defineCollection({
     confidence: z.enum(['high', 'medium']),
     sources: z.array(SourceSchema).min(1),
     topic_key: z.string().optional(),       // stable identifier for augment chain
-    superseded_by: SupersededBySchema.optional(),  // pointer to latest version
+    superseded_by: SupersededBySchema.optional(),  // pointer to latest version (this article is old)
+    previous_version: SupersededBySchema.optional(),  // pointer to prior version (this article is augment)
   }),
 });
 

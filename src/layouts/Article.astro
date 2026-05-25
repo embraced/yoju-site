@@ -30,10 +30,11 @@ interface Props {
   sources: Source[];
   slug: string;
   supersededBy?: SupersededBy;
+  previousVersion?: SupersededBy;
   topicKey?: string;
 }
 
-const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy } = Astro.props;
+const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy, previousVersion } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
 
@@ -45,6 +46,15 @@ const formattedDate = new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
 const supersededFormattedDate = supersededBy
   ? (() => {
       const [yy, mm, dd] = supersededBy.date.split('-').map(Number);
+      return new Date(yy, mm - 1, dd).toLocaleDateString('zh-TW', {
+        year: 'numeric', month: 'long', day: 'numeric',
+      });
+    })()
+  : null;
+
+const previousVersionFormattedDate = previousVersion
+  ? (() => {
+      const [yy, mm, dd] = previousVersion.date.split('-').map(Number);
       return new Date(yy, mm - 1, dd).toLocaleDateString('zh-TW', {
         year: 'numeric', month: 'long', day: 'numeric',
       });
@@ -63,6 +73,18 @@ const supersededFormattedDate = supersededBy
                   class="text-yoju-orange underline font-semibold hover:text-yoju-orange-light">
             {supersededBy.title}
           </a>
+        </p>
+      </aside>
+    )}
+
+    {previousVersion && (
+      <aside class="mb-6 bg-yoju-bg-card/60 border-l-2 border-yoju-border rounded-r px-5 py-3 text-sm text-yoju-text-muted">
+        <p>
+          📜 本文是更新版。前一版 (<time datetime={previousVersion.date}>{previousVersionFormattedDate}</time>)：
+          <a href={`/${previousVersion.slug}`}
+             class="text-yoju-orange underline hover:text-yoju-orange-light">
+            {previousVersion.title}
+          </a> — 內容已被本文整合，仍可作參考。
         </p>
       </aside>
     )}

@@ -24,6 +24,7 @@ const { Content } = await render(article);
   sources={article.data.sources}
   slug={article.id}
   supersededBy={article.data.superseded_by}
+  previousVersion={article.data.previous_version}
   topicKey={article.data.topic_key}
 >
   <Content />
