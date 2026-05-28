@@ -134,9 +134,21 @@ import Base from '../layouts/Base.astro';
       <p class="text-lg leading-relaxed mb-3">
         每篇文章的 frontmatter 都包含：原始來源連結（PubMed DOI、官方頁面）、期刊 Q 級別、發布日期、信心評等。讀者可以自行驗證每一條主張。
       </p>
-      <p class="text-base text-yoju-text-muted leading-relaxed">
+      <p class="text-base text-yoju-text-muted leading-relaxed mb-3">
         文章標示的期刊「Q 級別」（Q1–Q4）來自 <strong>SCImago Journal Rank</strong>。依其非商業使用條款致謝：SCImago, (n.d.). SJR — SCImago Journal &amp; Country Rank [Portal]. Retrieved 2026-05-28, from <a href="https://www.scimagojr.com" target="_blank" rel="noopener" class="text-yoju-orange underline">scimagojr.com</a>
       </p>
+      <div class="bg-yoju-bg-card border border-yoju-border rounded-lg p-5 mt-4">
+        <p class="font-semibold text-yoju-text mb-2">為什麼我們不把某些 Q1 期刊標成高品質</p>
+        <p class="leading-relaxed mb-2">
+          要誠實說：期刊的「Q 級別」衡量的是<strong>被引用的影響力</strong>，不完全等於<strong>審查的嚴謹程度</strong>。有些出版量很大、審查相對寬鬆的出版商，光靠引用數也能排到 Q1。
+        </p>
+        <p class="leading-relaxed mb-2">
+          為了不讓「Q1」這個標籤被高估，我們刻意把 <strong>Frontiers</strong> 與 <strong>Hindawi</strong> 旗下期刊排除在「高品質」標示之外——它們的論文仍可能出現在來源清單，但不會被我們標上 Q 級別、也不單獨當成高可信度的依據。
+        </p>
+        <p class="leading-relaxed">
+          這不是說它們是「假期刊」（它們都有同行評審、被 PubMed 收錄），而是我們選擇用比較保守的標準。出版量同樣大的 MDPI（如 Nutrients）目前仍保留分級。這份判斷會隨討論調整，歡迎指正。
+        </p>
+      </div>
     </section>
 
     <section class="border-l-4 border-yoju-border bg-yoju-bg-card/40 px-5 py-4 my-8 text-sm text-yoju-text-muted italic">
