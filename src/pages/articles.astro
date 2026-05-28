@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const all = (await getCollection('articles'))
+  .filter((a) => !a.data.superseded_by)
+  .sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+// Fixed category order (matches pipeline CATEGORIES); only render non-empty ones.
+const CATEGORY_ORDER = ['老年醫學', '心血管', '腦部健康', '骨骼關節', '代謝疾病', '感官退化'];
+const byCategory = CATEGORY_ORDER
+  .map((cat) => ({ cat, items: all.filter((a) => a.data.category === cat) }))
+  .filter((g) => g.items.length > 0);
+
+function fmtDate(date: string): string {
+  const [y, m, d] = date.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+}
+
+// Lowercased haystack for client-side substring search (title + tldr + tags + category).
+function haystack(a: typeof all[number]): string {
+  return [a.data.title, a.data.tldr, a.data.category, ...(a.data.tags ?? [])]
+    .join(' ')
+    .toLowerCase();
+}
+---
+
+<Base
+  title="全部文章 — 有據 yoju"
+  description="瀏覽所有衛教文章，可依分類或關鍵字（標題、主題、標籤）搜尋。"
+>
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-yoju-text mb-2">全部文章</h1>
+    <p class="text-base text-yoju-text-muted">
+      共 <span id="total-count">{all.length}</span> 篇 · 想找某篇轉傳給家人？用下面的搜尋框找關鍵字
+    </p>
+  </div>
+
+  <div class="mb-8 sticky top-0 bg-yoju-bg py-3 z-10">
+    <input
+      id="search"
+      type="search"
+      inputmode="search"
+      autocomplete="off"
+      placeholder="搜尋標題、主題或標籤，例如「血壓」「睡眠」「中年」"
+      aria-label="搜尋文章"
+      class="w-full text-lg px-4 py-3 rounded-xl border-2 border-yoju-border focus:border-yoju-orange focus:outline-none bg-white text-yoju-text"
+    />
+    <p id="result-count" class="mt-2 text-sm text-yoju-text-muted" hidden></p>
+  </div>
+
+  <div id="article-groups" class="space-y-10">
+    {byCategory.map((group) => (
+      <section data-cat-section>
+        <h2 class="text-xl font-bold text-yoju-text border-b border-yoju-border pb-2 mb-4">
+          <a href={`/${group.cat}`} class="hover:text-yoju-orange transition-colors">{group.cat}</a>
+          <span class="text-base font-normal text-yoju-text-muted">（{group.items.length}）</span>
+        </h2>
+        <ul class="space-y-4">
+          {group.items.map((a) => (
+            <li data-search={haystack(a)} class="border-l-2 border-yoju-border pl-4">
+              <a href={`/${a.id}`} class="block group">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <h3 class="text-lg font-semibold text-yoju-text group-hover:text-yoju-orange transition-colors leading-snug">
+                    {a.data.title}
+                  </h3>
+                </div>
+                <p class="text-sm text-yoju-text-muted mt-0.5">{fmtDate(a.data.date)}</p>
+              </a>
+              {a.data.tags && a.data.tags.length > 0 && (
+                <div class="flex flex-wrap gap-1.5 mt-1.5">
+                  {a.data.tags.map((tag) => (
+                    <a href={`/tag/${tag}`}
+                       class="text-xs text-yoju-orange border border-yoju-orange/40 rounded-full px-2 py-0.5 hover:bg-yoju-orange/10 transition-colors">
+                      #{tag}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p id="no-results" class="text-lg text-yoju-text-muted text-center py-10" hidden>
+    找不到符合「<span id="no-results-query"></span>」的文章，換個關鍵字試試。
+  </p>
+</Base>
+
+<script>
+  const input = document.getElementById('search') as HTMLInputElement;
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-search]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-cat-section]'));
+  const noResults = document.getElementById('no-results') as HTMLElement;
+  const noResultsQuery = document.getElementById('no-results-query') as HTMLElement;
+  const resultCount = document.getElementById('result-count') as HTMLElement;
+
+  function applyFilter() {
+    const q = input.value.trim().toLowerCase();
+    let visible = 0;
+    for (const el of items) {
+      const match = q === '' || (el.dataset.search ?? '').includes(q);
+      el.hidden = !match;
+      if (match) visible++;
+    }
+    // Hide category sections that have no visible items.
+    for (const sec of sections) {
+      const anyVisible = sec.querySelector('[data-search]:not([hidden])') !== null;
+      sec.hidden = !anyVisible;
+    }
+    if (q === '') {
+      resultCount.hidden = true;
+      noResults.hidden = true;
+    } else {
+      resultCount.hidden = false;
+      resultCount.textContent = `符合「${input.value.trim()}」的文章：${visible} 篇`;
+      noResults.hidden = visible > 0;
+      noResultsQuery.textContent = input.value.trim();
+    }
+  }
+
+  input.addEventListener('input', applyFilter);
+</script>
