@@ -8,6 +8,7 @@ const SourceSchema = z.object({
   quartile: z.enum(['Q1', 'Q2', 'Q3', 'Q4', 'official']).optional(),
   doi: z.string().optional(),
   retracted: z.boolean().default(false),
+  cited: z.boolean().optional(),  // referenced inline by [N]? drives SourceList grouping
 });
 
 const SupersededBySchema = z.object({

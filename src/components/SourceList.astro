@@ -6,6 +6,7 @@ interface Source {
   quartile?: 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'official';
   doi?: string;
   retracted: boolean;
+  cited?: boolean;
 }
 
 interface Props {
@@ -20,6 +21,21 @@ const quartileColor: Record<string, string> = {
   Q4:       'bg-gray-100 text-gray-600',
   official: 'bg-purple-100 text-purple-800',
 };
+
+// Preserve original 1-based numbering so #src-N anchors + inline [N] keep
+// pointing at the same source regardless of which group it renders in.
+const numbered = sources.map((s, i) => ({ ...s, n: i + 1 }));
+
+// "Related research" = a journal paper (not an official guideline) the
+// pipeline found but did NOT reference inline. Only group when the article
+// actually USES inline citations — the earliest articles predate the citation
+// system (0 cited), where "not cited" would wrongly imply "not incorporated".
+const hasFlags = sources.some((s) => s.cited !== undefined);
+const usesInlineCitations = numbered.some((s) => s.cited === true);
+const showGroups = hasFlags && usesInlineCitations;
+const isRelated = (s: Source) => s.cited === false && s.quartile !== 'official';
+const mainSources = showGroups ? numbered.filter((s) => !isRelated(s)) : numbered;
+const relatedSources = showGroups ? numbered.filter(isRelated) : [];
 ---
 
 <section class="mt-10 pt-6 border-t border-yoju-border">
@@ -28,9 +44,9 @@ const quartileColor: Record<string, string> = {
     內文的 <sup class="citation">[N]</sup> 上標可點擊跳到對應來源；按瀏覽器返回鍵可回到原段落。
   </p>
   <ol class="space-y-3 list-none pl-0">
-    {sources.map((s, i) => (
-      <li id={`src-${i + 1}`} class="flex items-start gap-3 text-base scroll-mt-16 target:bg-amber-50 target:rounded-md target:px-2 target:py-1 transition-colors">
-        <span class="shrink-0 mt-0.5 text-yoju-orange font-bold tabular-nums w-6">[{i + 1}]</span>
+    {mainSources.map((s) => (
+      <li id={`src-${s.n}`} class="flex items-start gap-3 text-base scroll-mt-16 target:bg-amber-50 target:rounded-md target:px-2 target:py-1 transition-colors">
+        <span class="shrink-0 mt-0.5 text-yoju-orange font-bold tabular-nums w-6">[{s.n}]</span>
         {s.quartile && (
           <span class={`shrink-0 mt-0.5 px-2 py-0.5 rounded text-xs font-bold ${quartileColor[s.quartile]}`}>
             {s.quartile === 'official' ? '官方' : s.quartile}
@@ -45,4 +61,31 @@ const quartileColor: Record<string, string> = {
       </li>
     ))}
   </ol>
+
+  {relatedSources.length > 0 && (
+    <div class="mt-8 pt-5 border-t border-dashed border-yoju-border">
+      <h3 class="text-lg font-semibold text-yoju-text mb-2">相關研究（未直接引用）</h3>
+      <p class="text-sm text-yoju-text-muted mb-4">
+        以下是與本主題相關的高品質期刊研究，但它們多屬較新或較專科的內容（例如新藥試驗、機轉研究），與本文著重的日常照護建議距離較遠，因此未直接寫進內文。為了透明，仍完整列出，供想深入了解或查證我們流程的讀者參考。
+      </p>
+      <ol class="space-y-3 list-none pl-0">
+        {relatedSources.map((s) => (
+          <li id={`src-${s.n}`} class="flex items-start gap-3 text-base text-yoju-text-muted scroll-mt-16 target:bg-amber-50 target:rounded-md target:px-2 target:py-1 transition-colors">
+            <span class="shrink-0 mt-0.5 font-bold tabular-nums w-6">[{s.n}]</span>
+            {s.quartile && (
+              <span class={`shrink-0 mt-0.5 px-2 py-0.5 rounded text-xs font-bold ${quartileColor[s.quartile]}`}>
+                {s.quartile === 'official' ? '官方' : s.quartile}
+              </span>
+            )}
+            <div>
+              <a href={s.url} target="_blank" rel="noopener noreferrer"
+                 class="text-yoju-orange underline">{s.title}</a>
+              {s.journal && <span class="ml-1">— {s.journal}</span>}
+              {s.doi && <span class="text-sm text-gray-400 ml-1">DOI: {s.doi}</span>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )}
 </section>
