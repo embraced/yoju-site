@@ -1,14 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../categories';
 
 const all = (await getCollection('articles'))
   .filter((a) => !a.data.superseded_by)
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 
-// Fixed category order (matches pipeline CATEGORIES); only render non-empty ones.
-const CATEGORY_ORDER = ['老年醫學', '心血管', '腦部健康', '骨骼關節', '代謝疾病', '感官退化'];
-const byCategory = CATEGORY_ORDER
+// Category section order = the shared CATEGORIES list (single source of truth,
+// also the schema's valid values), so no article can have a category that this
+// page fails to render. Only show non-empty sections.
+const byCategory = CATEGORIES
   .map((cat) => ({ cat, items: all.filter((a) => a.data.category === cat) }))
   .filter((g) => g.items.length > 0);
 
@@ -38,6 +40,20 @@ function haystack(a: typeof all[number]): string {
     </p>
   </div>
 
+  {byCategory.length > 1 && (
+    <nav aria-label="依分類快速跳轉" class="mb-6">
+      <p class="text-sm text-yoju-text-muted mb-2">分類（點選跳到該區）：</p>
+      <div class="flex flex-wrap gap-2">
+        {byCategory.map((group) => (
+          <a href={`#cat-${group.cat}`}
+             class="text-sm text-yoju-text border border-yoju-border rounded-full px-3 py-1 hover:border-yoju-orange hover:text-yoju-orange transition-colors">
+            {group.cat}<span class="text-yoju-text-muted">（{group.items.length}）</span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  )}
+
   <div class="mb-8 sticky top-0 bg-yoju-bg py-3 z-10">
     <input
       id="search"
@@ -53,7 +69,7 @@ function haystack(a: typeof all[number]): string {
 
   <div id="article-groups" class="space-y-10">
     {byCategory.map((group) => (
-      <section data-cat-section>
+      <section data-cat-section id={`cat-${group.cat}`} class="scroll-mt-28">
         <h2 class="text-xl font-bold text-yoju-text border-b border-yoju-border pb-2 mb-4">
           <a href={`/${group.cat}`} class="hover:text-yoju-orange transition-colors">{group.cat}</a>
           <span class="text-base font-normal text-yoju-text-muted">（{group.items.length}）</span>
@@ -90,6 +106,10 @@ function haystack(a: typeof all[number]): string {
     找不到符合「<span id="no-results-query"></span>」的文章，換個關鍵字試試。
   </p>
 </Base>
+
+<style is:global>
+  html { scroll-behavior: smooth; }
+</style>
 
 <script>
   const input = document.getElementById('search') as HTMLInputElement;

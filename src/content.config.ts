@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { CATEGORIES } from './categories';
 
 const SourceSchema = z.object({
   title: z.string(),
@@ -22,14 +23,7 @@ const articles = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD'),
-    category: z.enum([
-      '老年醫學',
-      '心血管',
-      '腦部健康',
-      '骨骼關節',
-      '代謝疾病',
-      '感官退化',
-    ]),
+    category: z.enum(CATEGORIES),
     lifestage: z.enum(['elderly', 'middle-age', 'both']).default('elderly'),
     tags: z.array(z.string()),
     tldr: z.string().max(200),
