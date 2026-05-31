@@ -1,9 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from './Base.astro';
 import TLDRBox from '../components/TLDRBox.astro';
 import SourceList from '../components/SourceList.astro';
 import ShareLine from '../components/ShareLine.astro';
 import RelatedArticles from '../components/RelatedArticles.astro';
+import { shortIdForSlug } from '../lib/short-url.mjs';
 
 interface Source {
   title: string;
@@ -37,6 +39,15 @@ interface Props {
 const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy, previousVersion } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
+
+// Short share URL: /y/{YYMMDD}{a|b|...} — see scripts/gen-redirects.mjs.
+// Computed from same algorithm so this article's render and the _redirects
+// file agree (single source of truth in src/lib/short-url.mjs).
+const allSlugs = (await getCollection('articles')).map((a) => a.id);
+const shortId = shortIdForSlug(slug, allSlugs);
+const articleShortUrl = Astro.site
+  ? new URL(`/y/${shortId}`, Astro.site).href
+  : `/y/${shortId}`;
 
 const [y, m, d] = date.split('-').map(Number);
 const formattedDate = new Date(y, m - 1, d).toLocaleDateString('zh-TW', {
@@ -112,13 +123,13 @@ const previousVersionFormattedDate = previousVersion
 
     <TLDRBox tldr={tldr} confidence={confidence} />
 
-    <ShareLine url={articleUrl} title={title} tldr={tldr} />
+    <ShareLine url={articleUrl} title={title} tldr={tldr} shortUrl={articleShortUrl} />
 
     <div class="prose-article">
       <slot />
     </div>
 
-    <ShareLine url={articleUrl} title={title} tldr={tldr} />
+    <ShareLine url={articleUrl} title={title} tldr={tldr} shortUrl={articleShortUrl} />
 
     <SourceList sources={sources} />
 

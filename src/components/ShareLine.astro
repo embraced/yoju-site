@@ -1,14 +1,24 @@
 ---
 interface Props {
-  url: string;
+  url: string;            // canonical article URL (used by FB OG crawler)
   title: string;
   tldr: string;
+  shortUrl?: string;      // optional /y/{id} alias for cleaner visible URL in shares
 }
-const { url, title, tldr } = Astro.props;
+const { url, title, tldr, shortUrl } = Astro.props;
 
-const shareText = `${title}\n\n${tldr}\n\n僅供參考，請諮詢醫師`;
-const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`;
-const fbUrl   = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+// Use short URL in the visible share text when available — it shows in the
+// message body in LINE; the canonical long URL would wrap to 3-4 lines.
+// The OG card preview still works because Cloudflare 301s short→canonical
+// and OG crawlers follow redirects.
+const displayUrl = shortUrl ?? url;
+const shareMessage = `${title}\n\n${tldr}\n\n${displayUrl}\n\n僅供參考，請諮詢醫師`;
+
+// Universal Link `line.me/R/msg/text/?...` opens the LINE app directly on
+// mobile (no Web-login redirect, unlike the social-plugins.line.me endpoint).
+// On desktop / without LINE installed it falls back to LINE web.
+const lineUrl = `https://line.me/R/msg/text/?${encodeURIComponent(shareMessage)}`;
+const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(displayUrl)}`;
 ---
 
 <div class="flex flex-wrap gap-3 my-8">
