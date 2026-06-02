@@ -30,6 +30,8 @@ const articles = defineCollection({
     confidence: z.enum(['high', 'medium']),
     sources: z.array(SourceSchema).min(1),
     topic_key: z.string().optional(),       // stable identifier for augment chain
+    related_topic_keys: z.array(z.string()).optional(),  // explicit pathway graph for footer
+    aliases: z.array(z.string()).optional(),  // keywords that auto-link FROM other articles TO this one
     superseded_by: SupersededBySchema.optional(),  // pointer to latest version (this article is old)
     previous_version: SupersededBySchema.optional(),  // pointer to prior version (this article is augment)
   }),

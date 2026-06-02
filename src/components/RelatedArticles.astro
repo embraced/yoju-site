@@ -6,16 +6,24 @@ interface Props {
   currentCategory: string;
   currentTags: string[];
   currentTopicKey?: string;
+  currentRelatedTopicKeys?: string[];
 }
 
-const { currentSlug, currentCategory, currentTags, currentTopicKey } = Astro.props;
+const { currentSlug, currentCategory, currentTags, currentTopicKey, currentRelatedTopicKeys } = Astro.props;
 
 const all = await getCollection('articles');
 
-// Score every candidate: category match (+3), shared tag (+2 each)
-// Exclude: self, superseded versions, same topic_key chain (already linked
-// via the "已有更新版" banner if applicable).
+// Scoring weights:
+//   +6  bidirectional pathway match (curated graph in queue.yaml)
+//   +3  same category
+//   +2  per shared tag
+// Pathway match outranks category+tags because the graph is hand-curated
+// disease-adjacency (e.g. OSA ↔ 心房顫動), which captures medical relevance
+// that tag overlap doesn't (different tags, same clinical chain).
+// Exclude: self, superseded versions, same topic_key chain.
 type Scored = { article: (typeof all)[number]; score: number };
+
+const currentRelSet = new Set(currentRelatedTopicKeys ?? []);
 
 const scored: Scored[] = all
   .filter((a) => a.id !== currentSlug)
@@ -23,6 +31,12 @@ const scored: Scored[] = all
   .filter((a) => !currentTopicKey || a.data.topic_key !== currentTopicKey)
   .map((a) => {
     let score = 0;
+    // Explicit pathway graph — bidirectional so user only needs to encode each
+    // edge once in queue.yaml (saves mirror-entry maintenance).
+    const otherRels = new Set(a.data.related_topic_keys ?? []);
+    const forwardMatch = a.data.topic_key && currentRelSet.has(a.data.topic_key);
+    const backwardMatch = currentTopicKey && otherRels.has(currentTopicKey);
+    if (forwardMatch || backwardMatch) score += 6;
     if (a.data.category === currentCategory) score += 3;
     const shared = a.data.tags.filter((t) => currentTags?.includes(t));
     score += shared.length * 2;
@@ -31,7 +45,6 @@ const scored: Scored[] = all
   .filter(({ score }) => score > 0)
   .sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
-    // Tiebreak: newer first
     return b.article.data.date.localeCompare(a.article.data.date);
   })
   .slice(0, 3);

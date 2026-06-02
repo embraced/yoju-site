@@ -34,6 +34,7 @@ interface Props {
   supersededBy?: SupersededBy;
   previousVersion?: SupersededBy;
   topicKey?: string;
+  relatedTopicKeys?: string[];
 }
 
 const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy, previousVersion } = Astro.props;
@@ -133,6 +134,6 @@ const previousVersionFormattedDate = previousVersion
 
     <SourceList sources={sources} />
 
-    <RelatedArticles currentSlug={slug} currentCategory={category} currentTags={tags} currentTopicKey={Astro.props.topicKey} />
+    <RelatedArticles currentSlug={slug} currentCategory={category} currentTags={tags} currentTopicKey={Astro.props.topicKey} currentRelatedTopicKeys={Astro.props.relatedTopicKeys} />
   </article>
 </Base>

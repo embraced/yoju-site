@@ -34,4 +34,15 @@
     @apply no-underline hover:underline;
     color: inherit;
   }
+
+  /* Inline cross-links to other yoju articles — softer than the orange
+     external/citation links so they don't compete visually with the body
+     text, but still discoverable on hover. */
+  article a.cross-link {
+    @apply text-yoju-orange/80 no-underline decoration-dotted underline-offset-4;
+    text-decoration-line: underline;
+  }
+  article a.cross-link:hover {
+    @apply text-yoju-orange decoration-solid;
+  }
 }
