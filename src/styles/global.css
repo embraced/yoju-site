@@ -45,4 +45,26 @@
   article a.cross-link:hover {
     @apply text-yoju-orange decoration-solid;
   }
+
+  /* Markdown tables — typically 「你以為 / 但實際上是？」 contrast blocks or
+     「自我檢核」 checklists. The default browser style is too cramped at
+     18px+ body text, and these blocks tend to carry the densest single-
+     block information in an article, so they need the most breathing room.
+     Header row gets a faint orange tint to distinguish from body. Cells
+     align top so multi-line rows stay visually anchored to their counterpart. */
+  article table {
+    @apply w-full border-collapse my-6 leading-relaxed;
+  }
+  article thead {
+    @apply bg-yoju-orange/5;
+  }
+  article th {
+    @apply px-4 py-3 text-left font-semibold border-b-2 border-yoju-orange/30;
+  }
+  article td {
+    @apply px-4 py-3 border-b border-yoju-border align-top;
+  }
+  article tbody tr:last-child td {
+    @apply border-b-0;
+  }
 }
