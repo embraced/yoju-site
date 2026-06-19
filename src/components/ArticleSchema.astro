@@ -1,0 +1,64 @@
+---
+// 每篇文章的 Article 結構化資料（schema.org JSON-LD）。
+// 重點：把 sources（PubMed/官方來源，含 DOI/journal）映射成 schema `citation`，
+// 讓 AI 答案引擎看見「這篇衛教有實證來源背書」→ 提升被引用的機會與可信度。
+interface Source {
+  title: string;
+  url: string;
+  journal?: string;
+  quartile?: string;
+  doi?: string;
+  retracted: boolean;
+}
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  slug: string;
+  category?: string;
+  tags?: string[];
+  sources?: Source[];
+}
+const { title, description, date, slug, category, tags = [], sources = [] } = Astro.props;
+
+const site = Astro.site;
+const url = site ? new URL(`/${slug}`, site).href : `/${slug}`;
+const image = site ? new URL(`/og/${slug}.png`, site).href : `/og/${slug}.png`;
+const siteUrl = site?.href ?? 'https://yoju.embraced.co/';
+const logo = site ? new URL('/og/default.png', site).href : '/og/default.png';
+const publisher = {
+  '@type': 'Organization',
+  name: '有據 yoju',
+  url: siteUrl,
+  logo: { '@type': 'ImageObject', url: logo },
+};
+
+const citation = sources
+  .filter((s) => !s.retracted)
+  .map((s) => ({
+    '@type': 'CreativeWork',
+    name: s.title,
+    ...(s.url ? { url: s.url } : {}),
+    ...(s.doi ? { sameAs: `https://doi.org/${s.doi}` } : {}),
+    ...(s.journal ? { isPartOf: { '@type': 'Periodical', name: s.journal } } : {}),
+  }));
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  inLanguage: 'zh-TW',
+  datePublished: date,
+  dateModified: date,
+  url,
+  mainEntityOfPage: url,
+  image: [image],
+  ...(tags.length ? { keywords: tags.join(', ') } : {}),
+  ...(category ? { articleSection: category } : {}),
+  author: { '@type': 'Organization', name: '有據 yoju', url: siteUrl },
+  publisher,
+  ...(citation.length ? { citation } : {}),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

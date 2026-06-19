@@ -22,6 +22,24 @@ const {
 
 const siteName = '有據 yoju';
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
+
+// 站台層 JSON-LD（每頁都有）— 建立發布者實體，供文章 schema 引用、利於 AI 答案引擎辨識
+const siteUrl = Astro.site?.href ?? 'https://yoju.embraced.co/';
+const orgLogo = Astro.site ? new URL('/og/default.png', Astro.site).href : '/og/default.png';
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: siteUrl,
+  inLanguage: 'zh-TW',
+  description: '以實證醫學為基礎的繁體中文健康衛教，每篇文章附 PubMed／官方來源出處。',
+  publisher: {
+    '@type': 'Organization',
+    name: siteName,
+    url: siteUrl,
+    logo: { '@type': 'ImageObject', url: orgLogo },
+  },
+};
 ---
 
 <!doctype html>
@@ -42,11 +60,23 @@ const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
 
+  <!-- Twitter / X -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={Astro.site ? new URL(ogImage, Astro.site).href : ogImage} />
+
   <!-- Canonical -->
   <link rel="canonical" href={canonicalUrl} />
 
   <!-- Favicon placeholder -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- 站台結構化資料（AI 答案引擎 / GEO） -->
+  <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+
+  <!-- 頁面專屬 head（文章 Article JSON-LD 等） -->
+  <slot name="head" />
 </head>
 <body>
   <header class="border-b border-yoju-border bg-yoju-bg-card">

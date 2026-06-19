@@ -1,0 +1,15 @@
+# 有據 yoju — 實證健康衛教
+
+> 繁體中文健康衛教部落格，每篇文章以實證醫學為基礎、附上 PubMed 與官方來源出處，並標註可信度。每日更新，主題涵蓋常見健康問題與中老年預防保健。
+
+## 關於
+- 名稱：有據 yoju
+- 特色：每篇附科學來源（含期刊分級／DOI）、雙重事實查證、標示可信度
+- 授權：文章內容採用 CC BY-SA 4.0
+- 官方網站：https://yoju.embraced.co
+
+## 重要頁面
+- [首頁](https://yoju.embraced.co/)
+- [全部文章](https://yoju.embraced.co/articles)
+- [關於](https://yoju.embraced.co/about)
+- [文章索引 Sitemap](https://yoju.embraced.co/sitemap-index.xml)

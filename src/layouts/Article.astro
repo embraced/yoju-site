@@ -5,6 +5,7 @@ import TLDRBox from '../components/TLDRBox.astro';
 import SourceList from '../components/SourceList.astro';
 import ShareLine from '../components/ShareLine.astro';
 import RelatedArticles from '../components/RelatedArticles.astro';
+import ArticleSchema from '../components/ArticleSchema.astro';
 import { shortIdForSlug } from '../lib/short-url.mjs';
 
 interface Source {
@@ -75,6 +76,7 @@ const previousVersionFormattedDate = previousVersion
 ---
 
 <Base title={title} description={tldr} ogImage={ogImage} ogType="article" canonicalUrl={articleUrl} articleUrl={articleUrl}>
+  <ArticleSchema slot="head" title={title} description={tldr} date={date} slug={slug} category={category} tags={tags} sources={sources} />
   <article>
     {supersededBy && (
       <aside class="mb-6 bg-yoju-orange/10 border-l-4 border-yoju-orange rounded-r-lg px-5 py-4 text-base text-yoju-text">
