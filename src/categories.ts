@@ -30,6 +30,9 @@ export const CATEGORIES = [
   '中年常見',
   '中年睡眠',
   '中年心理',
+  '兒少健康',
+  '兒少發展',
+  '兒少心理',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
