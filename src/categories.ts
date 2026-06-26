@@ -33,6 +33,8 @@ export const CATEGORIES = [
   '兒少健康',
   '兒少發展',
   '兒少心理',
+  '節令飲食',
+  '節令保健',
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
