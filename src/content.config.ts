@@ -27,6 +27,7 @@ const articles = defineCollection({
     lifestage: z.enum(['elderly', 'middle-age', 'both']).default('elderly'),
     tags: z.array(z.string()),
     tldr: z.string().max(200),
+    greeting: z.string().max(80).optional(),
     confidence: z.enum(['high', 'medium']),
     sources: z.array(SourceSchema).min(1),
     topic_key: z.string().optional(),       // stable identifier for augment chain

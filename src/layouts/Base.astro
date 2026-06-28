@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description: string;
+  ogDescription?: string;
   ogImage?: string;
   ogType?: string;
   canonicalUrl?: string;
@@ -14,6 +15,7 @@ interface Props {
 const {
   title,
   description,
+  ogDescription = description,
   ogImage = '/og/default.png',
   ogType = 'website',
   canonicalUrl = Astro.url.href,
@@ -54,7 +56,7 @@ const websiteLd = {
   <meta property="og:type"        content={ogType} />
   <meta property="og:site_name"   content={siteName} />
   <meta property="og:title"       content={fullTitle} />
-  <meta property="og:description" content={description} />
+  <meta property="og:description" content={ogDescription} />
   <meta property="og:image"       content={Astro.site ? new URL(ogImage, Astro.site).href : ogImage} />
   <meta property="og:url"         content={canonicalUrl} />
   <meta property="og:image:width"  content="1200" />
