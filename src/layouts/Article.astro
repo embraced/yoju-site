@@ -29,6 +29,7 @@ interface Props {
   category: string;
   tags: string[];
   tldr: string;
+  greeting?: string;
   confidence: 'high' | 'medium';
   sources: Source[];
   slug: string;
@@ -38,7 +39,7 @@ interface Props {
   relatedTopicKeys?: string[];
 }
 
-const { title, date, category, tags, tldr, confidence, sources, slug, supersededBy, previousVersion } = Astro.props;
+const { title, date, category, tags, tldr, greeting, confidence, sources, slug, supersededBy, previousVersion } = Astro.props;
 const articleUrl = Astro.site ? new URL(`/${slug}`, Astro.site).href : `/${slug}`;
 const ogImage = `/og/${slug}.png`;
 
@@ -75,7 +76,7 @@ const previousVersionFormattedDate = previousVersion
   : null;
 ---
 
-<Base title={title} description={tldr} ogImage={ogImage} ogType="article" canonicalUrl={articleUrl} articleUrl={articleUrl}>
+<Base title={title} description={tldr} ogDescription={greeting ?? tldr} ogImage={ogImage} ogType="article" canonicalUrl={articleUrl} articleUrl={articleUrl}>
   <ArticleSchema slot="head" title={title} description={tldr} date={date} slug={slug} category={category} tags={tags} sources={sources} />
   <article>
     {supersededBy && (
