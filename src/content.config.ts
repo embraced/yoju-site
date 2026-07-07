@@ -24,7 +24,7 @@ const articles = defineCollection({
     title: z.string(),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Must be YYYY-MM-DD'),
     category: z.enum(CATEGORIES),
-    lifestage: z.enum(['elderly', 'middle-age', 'both']).default('elderly'),
+    lifestage: z.enum(['elderly', 'middle-age', 'both', 'parenting']).default('elderly'),
     tags: z.array(z.string()),
     tldr: z.string().max(200),
     greeting: z.string().max(80).optional(),
