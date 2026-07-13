@@ -26,3 +26,6 @@ pnpm-debug.log*
 .idea/
 
 .superpowers/
+
+# Personal Claude Code permission overrides (per-machine, not shared)
+.claude/settings.local.json
